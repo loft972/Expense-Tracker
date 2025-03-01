@@ -42,4 +42,8 @@ public class Expense {
                 ", amount=" + amount +
                 '}';
     }
+
+    public String csvToString(){
+        return id + ","+  description + "," +  amount;
+    }
 }
