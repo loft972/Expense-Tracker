@@ -13,7 +13,7 @@ public class Appli {
                 if (args.length > 1) {
                     System.out.println(args[2] +", " + args[4]);
                 } else {
-                    System.out.println(args[2] +", " + args[4]);
+                    expenseService.summaryExpense();
                 }
             }
             default -> System.out.println("""

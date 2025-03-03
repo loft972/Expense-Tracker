@@ -1,9 +1,11 @@
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ExpenseService {
 
@@ -63,6 +65,17 @@ public class ExpenseService {
                 table.append(String.format("%-5s %-10s %-11s %-5s %n", row.getId(), row.getDate(), row.getDescription(), row.getAmount()));
             }
             System.out.println(table.toString());
+        }
+    }
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
+
+    public void summaryExpense(){
+        if(Files.exists(Path.of(fileName))){
+            expenseList = loadCsvFile();
+            Double sum = expenseList.stream()
+                    .map(Expense::getAmount).mapToDouble(Float::floatValue).sum();
+            System.out.println("Total Expense : "+  df.format(sum));
         }
     }
 
