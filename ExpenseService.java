@@ -52,6 +52,20 @@ public class ExpenseService {
         }
     }
 
+    public void showExpense(){
+        if(Files.exists(Path.of(fileName))){
+            expenseList = loadCsvFile();
+            StringBuilder table = new StringBuilder();
+
+            table.append(String.format("%-5s %-10s %-10s %-5s %n", "ID", "Date", "Description", "Amount"));
+
+            for (Expense row : expenseList) {
+                table.append(String.format("%-5s %-10s %-11s %-5s %n", row.getId(), row.getDate(), row.getDescription(), row.getAmount()));
+            }
+            System.out.println(table.toString());
+        }
+    }
+
 
     private List<Expense> loadCsvFile(){
         List<Expense> readExpenseCsv = new ArrayList<>();

@@ -8,7 +8,7 @@ public class Appli {
             case "add" -> expenseService.addExpense(args[1], Float.parseFloat(args[2]));
             case "update" -> expenseService.updateExpense(Integer.parseInt(args[1]), args[2], Float.parseFloat(args[3]));
             case "delete" ->expenseService.deleteExpenseByID(Integer.parseInt(args[1]));
-            case "list" -> System.out.println(args[2] +", " + args[4]);
+            case "list" -> expenseService.showExpense();
             case "summary" -> {
                 if (args.length > 1) {
                     System.out.println(args[2] +", " + args[4]);
