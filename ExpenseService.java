@@ -39,6 +39,19 @@ public class ExpenseService {
         }
     }
 
+    public void deleteExpenseByID(int id){
+        if(Files.exists(Path.of(fileName))){
+            expenseList = loadCsvFile();
+            boolean deletedExepense  = expenseList.removeIf(expense -> expense.getId() == id);
+            writeCsvFile();
+            if (deletedExepense) {
+                System.out.println("Expense deleted successfully");
+            } else {
+                System.out.println("Expense doesn't exist");
+            }
+        }
+    }
+
 
     private List<Expense> loadCsvFile(){
         List<Expense> readExpenseCsv = new ArrayList<>();
