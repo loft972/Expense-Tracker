@@ -5,8 +5,8 @@ public class Appli {
         ExpenseService expenseService = new ExpenseService();
 
         switch (args[0]) {
-            case "add" -> expenseService.addExpense(args[2], Float.parseFloat(args[4]));
-            case "update" -> System.out.println(args[2] +", " + args[4]);
+            case "add" -> expenseService.addExpense(args[1], Float.parseFloat(args[2]));
+            case "update" -> System.out.println(args[1] +", " + args[2]);
             case "delete" -> System.out.println(args[2] +", " + args[4]);
             case "list" -> System.out.println(args[2] +", " + args[4]);
             case "summary" -> {

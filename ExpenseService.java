@@ -2,7 +2,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ExpenseService {
@@ -32,7 +31,7 @@ public class ExpenseService {
             String line;
             while ((line = br.readLine()) != null){
                 String[] values = (line.split(","));
-                readExpenseCsv.add(new Expense(Integer.parseInt(values[0]), values[1], Float.parseFloat(values[2])));
+                readExpenseCsv.add(new Expense(Integer.parseInt(values[0]), values[1], values[2], Float.parseFloat(values[3])));
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

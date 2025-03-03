@@ -1,13 +1,25 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Expense {
 
     private int id;
     private String description;
     private float amount;
+    private String date;
 
     public Expense(int id, String description, float amount) {
         this.id = id;
         this.description = description;
         this.amount = amount;
+        this.date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    public Expense(int id,  String date, String description, float amount) {
+        this.id = id;
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
     }
 
     public int getId() {
@@ -34,6 +46,14 @@ public class Expense {
         this.amount = amount;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Expense{" +
@@ -44,6 +64,6 @@ public class Expense {
     }
 
     public String csvToString(){
-        return id + ","+  description + "," +  amount;
+        return id  +","+ date + ","+  description + "," +  amount;
     }
 }
