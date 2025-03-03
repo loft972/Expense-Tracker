@@ -3,6 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ExpenseService {
 
@@ -22,6 +23,20 @@ public class ExpenseService {
         expenseList.add(newExpense);
         writeCsvFile();
         System.out.println("Expense added successfully (ID:" + id +")");
+    }
+
+    public void updateExpense(int id, String description, float amount){
+        if(Files.exists(Path.of(fileName))) {
+            expenseList = loadCsvFile();
+            expenseList.stream()
+                    .filter(expId -> expId.getId() == id)
+                    .forEach(expense -> {
+                        expense.setDescription(description);
+                        expense.setAmount(amount);
+                    });
+            writeCsvFile();
+            System.out.println("update Expense: " + id + ","+ description+", " + amount);
+        }
     }
 
 
