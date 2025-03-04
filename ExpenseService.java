@@ -16,15 +16,15 @@ public class ExpenseService {
         expenseList = new ArrayList<>();
     }
 
-    public void addExpense(String description, float amout){
-        if(Files.exists(Path.of(fileName))) {
+    public void addExpense(String description, float amout) throws FileNotFoundException {
+        if(isFileExists()) {
             expenseList = loadCsvFile();
         }
 
         if(amout < 0 ){
             throw new ArithmeticException("An expense can not be negative !");
         }
-        
+
         int id = expenseList.isEmpty() ? 1 : expenseList.size() + 1;
         Expense newExpense = new Expense(id, description, amout);
         expenseList.add(newExpense);
@@ -33,7 +33,7 @@ public class ExpenseService {
     }
 
     public void updateExpense(int id, String description, float amount) throws Exception {
-        if(Files.exists(Path.of(fileName))) {
+        if(isFileExists()) {
             expenseList = loadCsvFile();
             List<Expense> updateList = expenseList.stream()
                     .filter(expId -> expId.getId() == id)
@@ -49,13 +49,11 @@ public class ExpenseService {
             });
             writeCsvFile(updateList);
             System.out.println("update Expense: " + id + ","+ description+", " + amount);
-        } else {
-            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
     public void deleteExpenseByID(int id) throws FileNotFoundException {
-        if(Files.exists(Path.of(fileName))){
+        if(isFileExists()){
             expenseList = loadCsvFile();
             boolean deletedExepense  = expenseList.removeIf(expense -> expense.getId() == id);
             writeCsvFile(expenseList);
@@ -64,13 +62,11 @@ public class ExpenseService {
             } else {
                 System.out.println("Expense doesn't exist");
             }
-        } else {
-            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
     public void showExpense() throws FileNotFoundException {
-        if(Files.exists(Path.of(fileName))){
+        if(isFileExists()){
             expenseList = loadCsvFile();
             StringBuilder table = new StringBuilder();
 
@@ -80,26 +76,22 @@ public class ExpenseService {
                 table.append(String.format("%-5s %-10s %-11s %-5s %n", row.getId(), row.getDate(), row.getDescription(), row.getAmount()));
             }
             System.out.println(table.toString());
-        } else {
-            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public void summaryExpense() throws FileNotFoundException {
-        if(Files.exists(Path.of(fileName))){
+        if(isFileExists()){
             expenseList = loadCsvFile();
             Double sum = expenseList.stream()
                     .map(Expense::getAmount).mapToDouble(Float::floatValue).sum();
             System.out.println("Total Expense : "+  df.format(sum));
-        } else {
-            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
     public void summaryExpenseByMonth(String month) throws FileNotFoundException {
-        if(Files.exists(Path.of(fileName))){
+        if(isFileExists()){
             expenseList = loadCsvFile();
 
             List<Expense>monthExpense = expenseList.stream()
@@ -113,8 +105,6 @@ public class ExpenseService {
                         .map(Expense::getAmount).mapToDouble(Float::floatValue).sum();
                 System.out.println("Total Expense for " + getMonthName(month) +" : "+  df.format(sum));
             }
-        } else {
-            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
@@ -164,6 +154,14 @@ public class ExpenseService {
             default -> monthName = "December";
         }
         return monthName;
+    }
+
+    private boolean isFileExists() throws FileNotFoundException {
+        if(Files.exists(Path.of(fileName))){
+            return true;
+        } else {
+            throw new FileNotFoundException("There are not Expense save, First add an expense");
+        }
     }
 
 }
