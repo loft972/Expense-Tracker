@@ -1,6 +1,8 @@
+import java.io.FileNotFoundException;
+
 public class Appli {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         ExpenseService expenseService = new ExpenseService();
 

@@ -20,45 +20,56 @@ public class ExpenseService {
         if(Files.exists(Path.of(fileName))) {
             expenseList = loadCsvFile();
         }
+
+        if(amout < 0 ){
+            throw new ArithmeticException("An expense can not be negative !");
+        }
+        
         int id = expenseList.isEmpty() ? 1 : expenseList.size() + 1;
         Expense newExpense = new Expense(id, description, amout);
         expenseList.add(newExpense);
-        writeCsvFile();
+        writeCsvFile(expenseList);
         System.out.println("Expense added successfully (ID:" + id +")");
     }
 
-    public void updateExpense(int id, String description, float amount){
+    public void updateExpense(int id, String description, float amount) throws Exception {
         if(Files.exists(Path.of(fileName))) {
             expenseList = loadCsvFile();
-            expenseList.stream()
+            List<Expense> updateList = expenseList.stream()
                     .filter(expId -> expId.getId() == id)
-                    .forEach(expense -> {
-                        expense.setDescription(description);
-                        expense.setAmount(amount);
-                    });
-            writeCsvFile();
+                    .toList();
+
+            if(updateList.isEmpty()){
+                throw new Exception("non existent expense ID");
+            }
+
+            updateList.forEach(expense -> {
+                expense.setDescription(description);
+                expense.setAmount(amount);
+            });
+            writeCsvFile(updateList);
             System.out.println("update Expense: " + id + ","+ description+", " + amount);
         } else {
-            System.out.println("There are not Expense save, First add an expense");
+            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
-    public void deleteExpenseByID(int id){
+    public void deleteExpenseByID(int id) throws FileNotFoundException {
         if(Files.exists(Path.of(fileName))){
             expenseList = loadCsvFile();
             boolean deletedExepense  = expenseList.removeIf(expense -> expense.getId() == id);
-            writeCsvFile();
+            writeCsvFile(expenseList);
             if (deletedExepense) {
                 System.out.println("Expense deleted successfully");
             } else {
                 System.out.println("Expense doesn't exist");
             }
         } else {
-            System.out.println("There are not Expense save, First add an expense");
+            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
-    public void showExpense(){
+    public void showExpense() throws FileNotFoundException {
         if(Files.exists(Path.of(fileName))){
             expenseList = loadCsvFile();
             StringBuilder table = new StringBuilder();
@@ -70,24 +81,24 @@ public class ExpenseService {
             }
             System.out.println(table.toString());
         } else {
-            System.out.println("There are not Expense save, First add an expense");
+            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
-    public void summaryExpense(){
+    public void summaryExpense() throws FileNotFoundException {
         if(Files.exists(Path.of(fileName))){
             expenseList = loadCsvFile();
             Double sum = expenseList.stream()
                     .map(Expense::getAmount).mapToDouble(Float::floatValue).sum();
             System.out.println("Total Expense : "+  df.format(sum));
         } else {
-            System.out.println("There are not Expense save, First add an expense");
+            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
-    public void summaryExpenseByMonth(String month){
+    public void summaryExpenseByMonth(String month) throws FileNotFoundException {
         if(Files.exists(Path.of(fileName))){
             expenseList = loadCsvFile();
 
@@ -103,7 +114,7 @@ public class ExpenseService {
                 System.out.println("Total Expense for " + getMonthName(month) +" : "+  df.format(sum));
             }
         } else {
-            System.out.println("There are not Expense save, First add an expense");
+            throw new FileNotFoundException("There are not Expense save, First add an expense");
         }
     }
 
@@ -124,7 +135,7 @@ public class ExpenseService {
         return readExpenseCsv;
     }
 
-    private void writeCsvFile(){
+    private void writeCsvFile(List<Expense> expenseList){
         try{
             FileWriter fw = new FileWriter(fileName);
             for(Expense expense : expenseList){
