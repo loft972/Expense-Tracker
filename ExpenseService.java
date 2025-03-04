@@ -79,6 +79,24 @@ public class ExpenseService {
         }
     }
 
+    public void summaryExpenseByMonth(String month){
+        if(Files.exists(Path.of(fileName))){
+            expenseList = loadCsvFile();
+
+            List<Expense>monthExpense = expenseList.stream()
+                    .filter(expense -> expense.getDate().substring(5,7).equals(month))
+                    .toList();
+
+            if(monthExpense.isEmpty()){
+                System.out.println("There not expense for " + getMonthName(month));
+            } else {
+                Double sum = monthExpense.stream()
+                        .map(Expense::getAmount).mapToDouble(Float::floatValue).sum();
+                System.out.println("Total Expense for " + getMonthName(month) +" : "+  df.format(sum));
+            }
+        }
+    }
+
 
     private List<Expense> loadCsvFile(){
         List<Expense> readExpenseCsv = new ArrayList<>();
@@ -106,6 +124,25 @@ public class ExpenseService {
         } catch (IOException exception){
             exception.printStackTrace();
         }
+    }
+
+    private String getMonthName(String monthNumber){
+        String monthName = "";
+        switch(monthNumber){
+            case "01" -> monthName = "January";
+            case "02" -> monthName = "February";
+            case "03" -> monthName = "March";
+            case "04" -> monthName = "April";
+            case "05" -> monthName = "May";
+            case "06" -> monthName = "June";
+            case "07" -> monthName = "July";
+            case "08" -> monthName = "August";
+            case "09" -> monthName = "September";
+            case "10" -> monthName = "October";
+            case "11" -> monthName = "November";
+            default -> monthName = "December";
+        }
+        return monthName;
     }
 
 }

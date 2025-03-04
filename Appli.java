@@ -11,7 +11,13 @@ public class Appli {
             case "list" -> expenseService.showExpense();
             case "summary" -> {
                 if (args.length > 1) {
-                    System.out.println(args[2] +", " + args[4]);
+
+                    if(args[1].length() == 1){
+                        expenseService.summaryExpenseByMonth("0"+args[1]);
+                    } else{
+                        expenseService.summaryExpenseByMonth(args[1]);
+                    }
+
                 } else {
                     expenseService.summaryExpense();
                 }
