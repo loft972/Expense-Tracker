@@ -38,6 +38,8 @@ public class ExpenseService {
                     });
             writeCsvFile();
             System.out.println("update Expense: " + id + ","+ description+", " + amount);
+        } else {
+            System.out.println("There are not Expense save, First add an expense");
         }
     }
 
@@ -51,6 +53,8 @@ public class ExpenseService {
             } else {
                 System.out.println("Expense doesn't exist");
             }
+        } else {
+            System.out.println("There are not Expense save, First add an expense");
         }
     }
 
@@ -65,6 +69,8 @@ public class ExpenseService {
                 table.append(String.format("%-5s %-10s %-11s %-5s %n", row.getId(), row.getDate(), row.getDescription(), row.getAmount()));
             }
             System.out.println(table.toString());
+        } else {
+            System.out.println("There are not Expense save, First add an expense");
         }
     }
 
@@ -76,6 +82,8 @@ public class ExpenseService {
             Double sum = expenseList.stream()
                     .map(Expense::getAmount).mapToDouble(Float::floatValue).sum();
             System.out.println("Total Expense : "+  df.format(sum));
+        } else {
+            System.out.println("There are not Expense save, First add an expense");
         }
     }
 
@@ -94,6 +102,8 @@ public class ExpenseService {
                         .map(Expense::getAmount).mapToDouble(Float::floatValue).sum();
                 System.out.println("Total Expense for " + getMonthName(month) +" : "+  df.format(sum));
             }
+        } else {
+            System.out.println("There are not Expense save, First add an expense");
         }
     }
 
