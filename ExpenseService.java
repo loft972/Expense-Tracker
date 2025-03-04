@@ -52,7 +52,7 @@ public class ExpenseService {
         }
     }
 
-    public void deleteExpenseByID(int id) throws FileNotFoundException {
+    public void deleteExpenseByID(int id) throws Exception {
         if(isFileExists()){
             expenseList = loadCsvFile();
             boolean deletedExepense  = expenseList.removeIf(expense -> expense.getId() == id);
@@ -60,7 +60,7 @@ public class ExpenseService {
             if (deletedExepense) {
                 System.out.println("Expense deleted successfully");
             } else {
-                System.out.println("Expense doesn't exist");
+                throw new Exception("non existent expense ID");
             }
         }
     }
@@ -75,7 +75,7 @@ public class ExpenseService {
             for (Expense row : expenseList) {
                 table.append(String.format("%-5s %-10s %-11s %-5s %n", row.getId(), row.getDate(), row.getDescription(), row.getAmount()));
             }
-            System.out.println(table.toString());
+            System.out.println(table);
         }
     }
 
