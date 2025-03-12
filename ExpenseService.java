@@ -5,7 +5,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ExpenseService {
 
@@ -35,19 +34,20 @@ public class ExpenseService {
     public void updateExpense(int id, String description, float amount) throws Exception {
         if(isFileExists()) {
             expenseList = loadCsvFile();
-            List<Expense> updateList = expenseList.stream()
+            Optional<Expense> updatingExpense = expenseList.stream()
                     .filter(expId -> expId.getId() == id)
-                    .toList();
+                    .findFirst();
 
-            if(updateList.isEmpty()){
+            if(updatingExpense.isEmpty()){
                 throw new Exception("non existent expense ID");
             }
 
-            updateList.forEach(expense -> {
-                expense.setDescription(description);
-                expense.setAmount(amount);
-            });
-            writeCsvFile(updateList);
+            updatingExpense.get().setDescription(description);
+            updatingExpense.get().setAmount(amount);
+
+            expenseList.removeIf(expense -> expense.getId() == id);
+            expenseList.add(updatingExpense.get());
+            writeCsvFile(expenseList);
             System.out.println("update Expense: " + id + ","+ description+", " + amount);
         }
     }
